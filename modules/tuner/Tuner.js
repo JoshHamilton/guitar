@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
+import freqToNoteName from '../utils/frequencyToNote';
+import Button from '../../components/Button';
 
 const Tuner = () => {
   const [note, setNote] = useState('Waiting for input...');
@@ -149,16 +151,6 @@ const Tuner = () => {
     return sampleRate / bestLag;
   };
 
-  // Convert frequency to a musical note
-  const freqToNoteName = (frequency) => {
-    const noteStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const noteNumber = 12 * (Math.log(frequency / 440) / Math.log(2));
-    const midiNumber = Math.round(noteNumber) + 69;
-    const noteIndex = midiNumber % 12;
-    const octave = Math.floor(midiNumber / 12) - 1;
-    return `${noteStrings[noteIndex]}${octave}`;
-  };
-
   useEffect(() => {
     return () => {
       cancelAnimationFrame(frameIdRef.current);
@@ -173,26 +165,20 @@ const Tuner = () => {
 
   return (
     <div id="tuner-component" className="bg-white p-8 rounded shadow-md max-w-md mx-auto text-center">
-      <h1 className="text-3xl font-bold mb-4">Guitar Tuner</h1>
+      <h1 className="text-3xl font-bold mb-4">Tuner</h1>
       <div id="tuner-controls" className="space-y-4">
         <p className="text-xl">
           {note}
         </p>
         <div className="flex justify-center gap-4">
           {!started ? (
-            <button 
-              onClick={startTuner} 
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
+            <Button onClick={startTuner} variant="primary">
               Start Tuner
-            </button>
+            </Button>
           ) : (
-            <button 
-              onClick={stopTuner}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-            >
+            <Button onClick={stopTuner} variant="danger">
               Stop Tuner
-            </button>
+            </Button>
           )}
         </div>
       </div>
